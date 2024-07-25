@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX_STATIONS 10000
 #define MAX_NAME_LENGTH 100
 
 typedef struct {
     char station_name[MAX_NAME_LENGTH];
-    float min, max, sum;
+    double min, max, sum;
     int count;
 } Station;
 
@@ -19,22 +20,27 @@ int find_staton_index(Station stations[], int station_count, char name[]) {
     return -1;
 }
 
-int main() {
-    FILE *file = fopen("test.txt", "r");
+int main(char argc, char *argv[]) {
+    FILE *file = fopen(argv[1], "r");
     Station stations[MAX_STATIONS];
 
     int station_count = 0;
-    char name[MAX_NAME_LENGTH];
-    float temperature;
+    char buffer[1024];
+
 
     //file format is stationName;temperature
 
-    while(fscanf(file, "%[^;];%f\n", name, &temperature) != EOF) {
-        int index = find_staton_index(stations, station_count, name);
+    while(fgets(buffer, 1024, file)) {
+        char *delim = strchr(buffer, ';');
+        *delim = '\0';
+
+        double temperature = strtod(delim + 1, NULL);
+
+        int index = find_staton_index(stations, station_count, buffer);
 
         if(index == -1){
             index = station_count++;
-            strcpy(stations[index].station_name, name);
+            strcpy(stations[index].station_name, buffer);
             stations[index].min = stations[index].max = temperature;
             stations[index].sum = temperature;
             stations[index].count = 1;
@@ -51,7 +57,7 @@ int main() {
     //print results in format {stationName=min/mean/max}
     printf("{");
     for(int i = 0; i < station_count; i++) {
-        printf("%s=%.2f/%.2f/%.2f\n", stations[i].station_name, stations[i].min, stations[i].sum / stations[i].count, stations[i].max);
+        printf("%s=%.1f/%.1f/%.1f%s", stations[i].station_name, stations[i].min, stations[i].sum / stations[i].count, stations[i].max, i < station_count - 1 ? ", " : "");
     }
     printf("}");
 
