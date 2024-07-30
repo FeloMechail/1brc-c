@@ -10,7 +10,7 @@
 
 typedef struct {
     char station_name[100];
-    double min, max, sum;
+    int min, max, sum;
     int count;
 } station;
 

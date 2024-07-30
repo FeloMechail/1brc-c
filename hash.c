@@ -110,7 +110,7 @@ void hashtbl_sort_print(hashtbl *tbl){
     }
     printf("{");
     for (size_t i = 0; i < tbl->size; i++){
-        printf("%s=%.1f/%.1f/%.1f%s", sorted[i].key, sorted[i].value->min, sorted[i].value->max, sorted[i].value->sum / sorted[i].value->count, i == tbl->size - 1 ? "" : ",");
+        printf("%s=%.1f/%.1f/%.1f%s", sorted[i].key, (double)sorted[i].value->min/10, (double)(sorted[i].value->sum/10) / sorted[i].value->count, (double)sorted[i].value->max/10, i == tbl->size - 1 ? "" : ", ");
     }
     puts("}");
     free(sorted);

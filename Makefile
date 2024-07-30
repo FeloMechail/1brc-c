@@ -6,7 +6,7 @@ CFLAGS = -O3 -funroll-loops -m64 -march=native -std=c17 -mtune=native -flto -Wal
 TARGET = bin/myprogram
 
 # Source files
-SRCS = main1.c hash.c
+SRCS = main2.c hash.c
 
 # Object files
 OBJS = $(patsubst %.c,bin/%.o,$(SRCS))
@@ -25,6 +25,10 @@ $(TARGET): $(OBJS)
 bin/%.o: %.c $(HEADERS)
 	mkdir -p bin
 	$(CC) $(CFLAGS) -c $< -o $@
+
+#build with -pg for gprof:
+gprof: CFLAGS += -pg
+gprof: all
 
 # Clean up build files
 clean:
