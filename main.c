@@ -11,6 +11,10 @@ typedef struct {
     int count;
 } Station;
 
+int comparator(const void* p, const void* q){
+    return strcmp(((Station*)p)->station_name, ((Station*)q)->station_name);
+}
+
 int find_staton_index(Station stations[], int station_count, char name[]) {
     for(int i = 0; i < station_count; i++) {
         if(strcmp(stations[i].station_name, name) == 0) {
@@ -20,8 +24,9 @@ int find_staton_index(Station stations[], int station_count, char name[]) {
     return -1;
 }
 
-int main(char argc, char *argv[]) {
-    FILE *file = fopen(argv[1], "r");
+int main() {
+    //FILE *file = fopen(argv[1], "r");
+    FILE *file = fopen("measurements.txt", "r");
     Station stations[MAX_STATIONS];
 
     int station_count = 0;
@@ -54,6 +59,8 @@ int main(char argc, char *argv[]) {
 
     fclose(file);
 
+    qsort((void*) stations, station_count, sizeof(Station), comparator);
+
     //print results in format {stationName=min/mean/max}
     printf("{");
     for(int i = 0; i < station_count; i++) {
@@ -63,4 +70,3 @@ int main(char argc, char *argv[]) {
 
     return 0;
 }
-
